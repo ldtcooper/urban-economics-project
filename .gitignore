@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 secrets.json
+
+/data/sf12010tractdistance100miles.csv
