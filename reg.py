@@ -7,7 +7,8 @@ dir_path = Path(os.path.dirname(os.path.realpath(__file__)))
 
 def run_regression(eq: str, data: pd.DataFrame, reg_number: int) -> None: # saves to pickle
     reg = smf.ols(formula=eq, data=data).fit()
-    reg.save(dir_path / f'model{reg_number}.pickle')
+    with open((dir_path / f'model-{reg_number}-summary.txt'), 'w') as f:
+        f.write(reg.summary().as_text())
 
 model_definitions = [
     "income ~ distance + C(msa_code)",
@@ -27,4 +28,3 @@ for i, eq in enumerate(model_definitions):
     print(f'Running Regression {n}...')
     run_regression(eq, data, n)
     print(f'Regression {n} Done!\n')
-    input('Press any key to continue')
