@@ -7,18 +7,20 @@ dir_path = Path(os.path.dirname(os.path.realpath(__file__)))
 
 def run_regression(eq: str, data: pd.DataFrame, reg_number: int) -> None: # saves to pickle
     reg = smf.ols(formula=eq, data=data).fit()
-    reg.save(dir_path / 'models' / f'model{reg_number}.py')
+    reg.save(dir_path / f'model{reg_number}.pickle')
 
 model_definitions = [
-    # "income ~ distance + C(LEAID)",
-    "income ~ distance + pub_trans_gt_10pct + C(LEAID) ",
+    "income ~ distance + C(msa_code)",
+    "income ~ distance + C(LEAID)",
+    "income ~ distance + pub_trans_gt_10pct + C(LEAID)",
     # built_1980_1989 ommitted 
     "income ~ distance + pub_trans_gt_10pct + built_1999_2000 + built_1995_1998 + built_1990_1994 +  built_1970_79 + built_1960_69 + built_1950_59 + built_1940_49 + built_1939_earlier + C(LEAID)",
 ]
 
-print('Loading Data')
+print('Loading Data...')
 data = pd.read_csv(dir_path / 'msa_tracts_dist.csv', index_col=False)
 data.dropna(inplace=True)
+print('Data loaded!\n')
 
 for i, eq in enumerate(model_definitions):
     n = i + 1

@@ -30,8 +30,8 @@ population = "B01003_001E"
 building_const = [f'B25034_{"00" if i < 10 else "0"}{i}E' for i in range(2, 12)]
 
 msa_vars = (name, mean_inc)
-tract_vars_2019 = tuple([name, mean_inc, num_public_transit, population] + building_const)
-tract_vars_2000 = tuple([name] + building_const)
+tract_vars_2019 = tuple([name, mean_inc, population] + building_const)
+tract_vars_2000 = tuple([name, num_public_transit] + building_const)
 
 c = Census(API_KEY)
 
