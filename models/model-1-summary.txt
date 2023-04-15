@@ -3,8 +3,8 @@
 Dep. Variable:                 income   R-squared:                       0.038
 Model:                            OLS   Adj. R-squared:                  0.031
 Method:                 Least Squares   F-statistic:                     5.319
-Date:                Fri, 14 Apr 2023   Prob (F-statistic):          9.96e-183
-Time:                        15:13:36   Log-Likelihood:                -23998.
+Date:                Sat, 15 Apr 2023   Prob (F-statistic):          9.96e-183
+Time:                        15:48:59   Log-Likelihood:                -23998.
 No. Observations:               43570   AIC:                         4.864e+04
 Df Residuals:                   43248   BIC:                         5.144e+04
 Df Model:                         321                                         
