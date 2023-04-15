@@ -15,7 +15,7 @@ model_definitions = [
     "income ~ distance + C(LEAID)",
     "income ~ distance + pub_trans_gt_10pct + C(LEAID)",
     # built_1980_1989 ommitted 
-    "income ~ distance + pub_trans_gt_10pct + built_1999_2000 + built_1995_1998 + built_1990_1994 +  built_1970_79 + built_1960_69 + built_1950_59 + built_1940_49 + built_1939_earlier + C(LEAID)",
+    "income ~ distance + pub_trans_gt_10pct + built_1999_2000 + built_1995_1998 + built_1990_1994 +  built_1970_1979 + built_1960_1969 + built_1950_1959 + built_1940_1949 + built_1939_earlier + C(LEAID)",
 ]
 
 print('Loading Data...')
