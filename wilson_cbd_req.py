@@ -23,7 +23,7 @@ def convert_block_to_tract(block_fips: str) -> str:
 def list_el_to_output(msa: str, lat: float, lon: float) -> Dict[str, str]:
     block_fips = make_block_request(lat=lat, lon=lon)
     tract_fips = convert_block_to_tract(block_fips)
-    return {'msa_id': msa, 'tract_id': tract_fips}
+    return {'msa_id': msa, 'wilson_cbd': tract_fips}
 
 dir_path = Path(os.path.dirname(os.path.realpath(__file__)))
 
