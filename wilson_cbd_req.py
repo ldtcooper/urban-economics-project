@@ -29,4 +29,4 @@ dir_path = Path(os.path.dirname(os.path.realpath(__file__)))
 
 ll_data = get_lat_lon_data()
 fips_data = [list_el_to_output(msa, lat, lon) for msa, lat, lon in tqdm(list(ll_data.itertuples(index=False, name=None)))]
-pd.DataFrame(fips_data).to_csv(dir_path / 'data' / 'wilson_cbd.csv')
+pd.DataFrame(fips_data).to_csv(dir_path / 'data' / 'wilson_cbd.csv', index=False)
