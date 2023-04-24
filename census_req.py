@@ -22,12 +22,13 @@ API_KEY = load_api_key()
 
 # Define the variables to retrieve
 # get these here: https://api.census.gov/data/2019/acs/acs5/variables.html
+name = "NAME"
 mean_inc = "B19019_001E"
 num_public_transit = "B08301_010E"
 population = "B01003_001E"
 # building_const = [f'B25034_{"00" if i < 10 else "0"}{i}E' for i in range(2, 12)]
 
-msa_vars = (mean_inc)
+msa_vars = (name, mean_inc)
 tract_vars_2019 = (mean_inc, population)
 # tract_vars_2000 = (name, num_public_transit)
 
