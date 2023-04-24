@@ -16,7 +16,7 @@ model_definitions = [
     ]
 
 def run_regression(eq: str, data: pd.DataFrame, reg_number: int, reg_type: str) -> None: # saves to txt file
-    reg = smf.wls(formula=eq, data=data, missing='drop').fit(method='qr')
+    reg = smf.ols(formula=eq, data=data, missing='drop').fit(method='qr')
     with open((dir_path / f'model-{reg_type}-{reg_number}-summary.txt'), 'w') as f:
         f.write(reg.summary().as_text())
 
