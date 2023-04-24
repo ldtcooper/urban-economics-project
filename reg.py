@@ -13,6 +13,7 @@ model_definitions = [
         "income ~ C(LEAID) + distance + pub_trans_gt_10pct",
         # built_1980_1989 ommitted 
         "income ~ C(LEAID) + distance + pub_trans_gt_10pct + built_1999_2000 + built_1995_1998 + built_1990_1994 +  built_1970_1979 + built_1960_1969 + built_1950_1959 + built_1940_1949 + built_1939_earlier",
+        "income ~ C(LEAID) + distance + np.power(distance, 2) + np.power(distance, 3) + pub_trans_gt_10pct + built_1999_2000 + built_1995_1998 + built_1990_1994 +  built_1970_1979 + built_1960_1969 + built_1950_1959 + built_1940_1949 + built_1939_earlier",
     ]
 
 def run_regression(eq: str, data: pd.DataFrame, reg_number: int, reg_type: str) -> None: # saves to txt file
