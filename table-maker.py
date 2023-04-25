@@ -139,11 +139,15 @@ def build_table(dist: str, subset: str) -> List[str]:
     c = data['cities']
     d = data['dist']
     table_template = [
+        r'\begin{landscape}',
+        r'\thispagestyle{empty}',
+        r'\newgeometry{left=2in, top=5.5in, bottom=1in}',
+        r'\newpage',
         r'\begin{table}[h]\centering',
         r'\caption{\label{tab:table-' + dist + '_' + subset + '} Regression Results: ' + c + ' for ' + d + '-Distance}',
         r'\begin{tabular}{l|llllll}',
         r'\hline',
-        r'& \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Distance\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Local Amenities\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Public Transit\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Dwelling Age\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-squared\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-Squared\end{tabular}} \\ \hline',
+        r'& \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Distance\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Local Amenities\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Public Transit\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Dwelling Age\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-Squared\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-Cubed\end{tabular}} \\ \hline',
         r'Distance & ' + data['reg_1']['distance'] + ' & ' + data['reg_2']['distance'] + ' & ' + data['reg_3']['distance'] + ' & ' + data['reg_4']['distance'] + ' & ' + data['reg_5']['distance'] + ' & ' + data['reg_6']['distance'] + r' \\',
         r'Distance-Squared &' + data['reg_1']['distance_sq'] + ' & ' + data['reg_2']['distance_sq'] + ' & ' + data['reg_3']['distance_sq'] + ' & ' + data['reg_4']['distance_sq'] + ' & ' + data['reg_5']['distance_sq'] + ' & ' + data['reg_6']['distance_sq'] + r' \\',
         r'Distance-Cubed &' + data['reg_1']['distance_cu'] + ' & ' + data['reg_2']['distance_cu'] + ' & ' + data['reg_3']['distance_cu'] + ' & ' + data['reg_4']['distance_cu'] + ' & ' + data['reg_5']['distance_cu'] + ' & ' + data['reg_6']['distance_cu'] + r' \\',
@@ -162,7 +166,10 @@ def build_table(dist: str, subset: str) -> List[str]:
         r'School District Fixed Effects &' + data['reg_1']['school_fe'] + ' & ' + data['reg_2']['school_fe'] + ' & ' + data['reg_3']['school_fe'] + ' & ' + data['reg_4']['school_fe'] + ' & ' + data['reg_5']['school_fe'] + ' & ' + data['reg_6']['school_fe'] + r' \\',
         r'Adjusted $R^2$ &' + data['reg_1']['r2'] + ' & ' + data['reg_2']['r2'] + ' & ' + data['reg_3']['r2'] + ' & ' + data['reg_4']['r2'] + ' & ' + data['reg_5']['r2'] + ' & ' + data['reg_6']['r2'] + r' \\\hline',
         r'\end{tabular}',
-        r'\end{table}'
+        r'\end{table}',
+        r'\newpage',
+        r'\end{landscape}',
+        r'\restoregeometry'
     ]
     return table_template
 

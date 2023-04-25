@@ -1,8 +1,12 @@
+\begin{landscape}
+\thispagestyle{empty}
+\newgeometry{left=2in, top=5.5in, bottom=1in}
+\newpage
 \begin{table}[h]\centering
 \caption{\label{tab:table-br_total} Regression Results: All MSAs for BR-Distance}
 \begin{tabular}{l|llllll}
 \hline
-& \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Distance\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Local Amenities\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Public Transit\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Dwelling Age\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-squared\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-Squared\end{tabular}} \\ \hline
+& \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Distance\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Local Amenities\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Public Transit\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Dwelling Age\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-Squared\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-Cubed\end{tabular}} \\ \hline
 Distance & 0.004 ($<$0.001) & 0.0058 ($<$0.001) & 0.0053 ($<$0.001) & 0.004 ($<$0.001) & 0.0081 ($<$0.001) & 0.0082 ($<$0.001) \\
 Distance-Squared &- & - & - & - & -0.0001 ($<$0.001) & -0.0001 (0.309) \\
 Distance-Cubed &- & - & - & - & - & 1.103e-07 (0.951) \\
@@ -22,3 +26,6 @@ School District Fixed Effects &- & 5484 & 5484 & 5484 & 5484 & 5484 \\
 Adjusted $R^2$ &0.029 & 0.296 & 0.322 & 0.394 & 0.394 & 0.394 \\\hline
 \end{tabular}
 \end{table}
+\newpage
+\end{landscape}
+\restoregeometry
