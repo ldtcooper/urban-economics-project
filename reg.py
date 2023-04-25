@@ -16,15 +16,15 @@ model_definitions = [
         "income ~ C(LEAID) + distance + np.power(distance, 2) + np.power(distance, 3) + pub_trans_gt_10pct + built_1999_2000 + built_1995_1998 + built_1990_1994 +  built_1970_1979 + built_1960_1969 + built_1950_1959 + built_1940_1949 + built_1939_earlier",
     ]
 
-def run_regression(eq: str, data: pd.DataFrame, reg_number: int, reg_type: str) -> None: # saves to txt file
+def run_regression(eq: str, data: pd.DataFrame, reg_number: int, filename: str) -> None: # saves to txt file
     reg = smf.wls(formula=eq, data=data, missing='drop').fit(method='qr')
-    with open((dir_path / f'model-{reg_type}-{reg_number}-summary.txt'), 'w') as f:
+    with open((dir_path / 'models' / f'reg-{reg_number}-{filename}.txt'), 'w') as f:
         f.write(reg.summary().as_text())
 
 def run_models(filename: str) -> None: #calls above
     print(f'Loading file {filename}...')
     data = pd.read_csv(
-        dir_path / filename, 
+        dir_path / 'data' / filename, 
         index_col=False,
         dtype={'msa_code': str, 'LEAID': str, 'pub_trans_gt_10pct': int}
         )
@@ -35,9 +35,9 @@ def run_models(filename: str) -> None: #calls above
     for i, eq in enumerate(model_definitions):
         n = i + 1
         print(f'Running Regression {n}...')
-        run_regression(eq, data, n, reg_type)
+        run_regression(eq, data, n, filename)
         print(f'Regression {n} Done!\n')
-    print(f'{reg_type} models done!')
+    print(f'Models for {filename} done!')
 
-for dataset in os.listdir(dirpath / 'data'):
+for dataset in os.listdir(dir_path / 'data'):
     run_models(dataset)
