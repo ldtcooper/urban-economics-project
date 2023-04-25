@@ -39,12 +39,16 @@ def extract_intercept(f_lines: summary) -> str:
     cell_vals = [float(el) for el in multi_space_re.split(int_cell)[1:-1]]
     return (cell_vals[0], cell_vals[3]) # value + p_val
 
+def handle_p_val(p_val: float) -> str:
+    return '$<$0.001' if p_val < 0.001 else f'{p_val:.3f}'
+        
+
 def extract_line_builder(name: str) -> Callable:
     def extract_line(f_lines: summary) -> str:
         try:
             int_cell = [el for el in f_lines if el.startswith(name)][0]
             cell_vals = [float(el) for el in multi_space_re.split(int_cell)[1:-1]]
-            return f'{cell_vals[0]} ({cell_vals[3]})' # value + p_val
+            return f'{cell_vals[0]} ({handle_p_val(cell_vals[3])})' # value + p_val
         except IndexError: # if this fails, then that value wasn't found
             return '-'
         
@@ -130,39 +134,39 @@ def build_save_path(dist: str, subset: str) -> Path:
     except NameError:
         return f'./assets/tables/tab-{dist}-{subset}.tex' 
 
-def build_table(dist: str, subset: str) -> str:
+def build_table(dist: str, subset: str) -> List[str]:
     data = get_table_data(dist, subset)
     c = data['cities']
     d = data['dist']
-    table_template = (
-        r'\begin{table}[h]\centering'
-        r'\caption{\label{tab:table-' + dist + '_' + subset + '} Regression Results: ' + c + ' for ' + d + '-Distance'
-        r'\begin{tabular}{l|llllll}'
-        r'\hline'
-        r'& \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Distance\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Local Amenities\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Public Transit\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Dwelling Age\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-squared\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-Squared\end{tabular}} \\ \hline'
-        r'Distance & ' + data['reg_1']['distance'] + ' & ' + data['reg_2']['distance'] + ' & ' + data['reg_3']['distance'] + ' & ' + data['reg_4']['distance'] + ' & ' + data['reg_5']['distance'] + ' & ' + data['reg_6']['distance'] + r' \\'
-        r'Distance-Squared ' + data['reg_1']['distance_sq'] + ' & ' + data['reg_2']['distance_sq'] + ' & ' + data['reg_3']['distance_sq'] + ' & ' + data['reg_4']['distance_sq'] + ' & ' + data['reg_5']['distance_sq'] + ' & ' + data['reg_6']['distance_sq'] + r' \\'
-        r'Distance-Cubed ' + data['reg_1']['distance_cu'] + ' & ' + data['reg_2']['distance_cu'] + ' & ' + data['reg_3']['distance_cu'] + ' & ' + data['reg_4']['distance_cu'] + ' & ' + data['reg_5']['distance_cu'] + ' & ' + data['reg_6']['distance_cu'] + r' \\'
-        r'Access to Public Transit in 2000 ' + data['reg_1']['transit'] + ' & ' + data['reg_2']['transit'] + ' & ' + data['reg_3']['transit'] + ' & ' + data['reg_4']['transit'] + ' & ' + data['reg_5']['transit'] + ' & ' + data['reg_6']['transit'] + r' \\'
-        r'\% Buildings Built 1999-2000 ' + data['reg_1']['built_1999_2000'] + ' & ' + data['reg_2']['built_1999_2000'] + ' & ' + data['reg_3']['built_1999_2000'] + ' & ' + data['reg_4']['built_1999_2000'] + ' & ' + data['reg_5']['built_1999_2000'] + ' & ' + data['reg_6']['built_1999_2000'] + r' \\'
-        r'\% Buildings Built 1995-1998 ' + data['reg_1']['built_1995_1998'] + ' & ' + data['reg_2']['built_1995_1998'] + ' & ' + data['reg_3']['built_1995_1998'] + ' & ' + data['reg_4']['built_1995_1998'] + ' & ' + data['reg_5']['built_1995_1998'] + ' & ' + data['reg_6']['built_1995_1998'] + r' \\'
-        r'\% Buildings Built 1990-1994 ' + data['reg_1']['built_1990_1994'] + ' & ' + data['reg_2']['built_1990_1994'] + ' & ' + data['reg_3']['built_1990_1994'] + ' & ' + data['reg_4']['built_1990_1994'] + ' & ' + data['reg_5']['built_1990_1994'] + ' & ' + data['reg_6']['built_1990_1994'] + r' \\'
-        r'\% Buildings Built 1970-1979 ' + data['reg_1']['built_1970_1979'] + ' & ' + data['reg_2']['built_1970_1979'] + ' & ' + data['reg_3']['built_1970_1979'] + ' & ' + data['reg_4']['built_1970_1979'] + ' & ' + data['reg_5']['built_1970_1979'] + ' & ' + data['reg_6']['built_1970_1979'] + r' \\'
-        r'\% Buildings Built 1960-1969 ' + data['reg_1']['built_1960_1969'] + ' & ' + data['reg_2']['built_1960_1969'] + ' & ' + data['reg_3']['built_1960_1969'] + ' & ' + data['reg_4']['built_1960_1969'] + ' & ' + data['reg_5']['built_1960_1969'] + ' & ' + data['reg_6']['built_1960_1969'] + r' \\'
-        r'\% Buildings Built 1950-1959 ' + data['reg_1']['built_1950_1959'] + ' & ' + data['reg_2']['built_1950_1959'] + ' & ' + data['reg_3']['built_1950_1959'] + ' & ' + data['reg_4']['built_1950_1959'] + ' & ' + data['reg_5']['built_1950_1959'] + ' & ' + data['reg_6']['built_1950_1959'] + r' \\'
-        r'\% Buildings Built 1940-1949 ' + data['reg_1']['built_1940_1949'] + ' & ' + data['reg_2']['built_1940_1949'] + ' & ' + data['reg_3']['built_1940_1949'] + ' & ' + data['reg_4']['built_1940_1949'] + ' & ' + data['reg_5']['built_1940_1949'] + ' & ' + data['reg_6']['built_1940_1949'] + r' \\'
-        r'\% Buildings Built 1939 or Earlier ' + data['reg_1']['built_1939_earlier'] + ' & ' + data['reg_2']['built_1939_earlier'] + ' & ' + data['reg_3']['built_1939_earlier'] + ' & ' + data['reg_4']['built_1939_earlier'] + ' & ' + data['reg_5']['built_1939_earlier'] + ' & ' + data['reg_6']['built_1939_earlier'] + r' \\'
-        r'Intercept ' + data['reg_1']['intercept'] + ' & ' + data['reg_2']['intercept'] + ' & ' + data['reg_3']['intercept'] + ' & ' + data['reg_4']['intercept'] + ' & ' + data['reg_5']['intercept'] + ' & ' + data['reg_6']['intercept'] + r' \\'
-        r'Observations ' + data['reg_1']['N'] + ' & ' + data['reg_2']['N'] + ' & ' + data['reg_3']['N'] + ' & ' + data['reg_4']['N'] + ' & ' + data['reg_5']['N'] + ' & ' + data['reg_6']['N'] + r' \\'
-        r'MSA Fixed Effects ' + data['reg_1']['msa_fe'] + ' & ' + data['reg_2']['msa_fe'] + ' & ' + data['reg_3']['msa_fe'] + ' & ' + data['reg_4']['msa_fe'] + ' & ' + data['reg_5']['msa_fe'] + ' & ' + data['reg_6']['msa_fe'] + r' \\'
-        r'School District Fixed Effects ' + data['reg_1']['school_fe'] + ' & ' + data['reg_2']['school_fe'] + ' & ' + data['reg_3']['school_fe'] + ' & ' + data['reg_4']['school_fe'] + ' & ' + data['reg_5']['school_fe'] + ' & ' + data['reg_6']['school_fe'] + r' \\'
-        r'Adjusted $R^2$ ' + data['reg_1']['r2'] + ' & ' + data['reg_2']['r2'] + ' & ' + data['reg_3']['r2'] + ' & ' + data['reg_4']['r2'] + ' & ' + data['reg_5']['r2'] + ' & ' + data['reg_6']['r2'] + ' \\ \hline'
-        r'\end{tabular}'
+    table_template = [
+        r'\begin{table}[h]\centering',
+        r'\caption{\label{tab:table-' + dist + '_' + subset + '} Regression Results: ' + c + ' for ' + d + '-Distance}',
+        r'\begin{tabular}{l|llllll}',
+        r'\hline',
+        r'& \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Distance\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Local Amenities\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Public Transit\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Control for \\ Dwelling Age\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-squared\end{tabular}} & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}Include\\ Distance-Squared\end{tabular}} \\ \hline',
+        r'Distance & ' + data['reg_1']['distance'] + ' & ' + data['reg_2']['distance'] + ' & ' + data['reg_3']['distance'] + ' & ' + data['reg_4']['distance'] + ' & ' + data['reg_5']['distance'] + ' & ' + data['reg_6']['distance'] + r' \\',
+        r'Distance-Squared &' + data['reg_1']['distance_sq'] + ' & ' + data['reg_2']['distance_sq'] + ' & ' + data['reg_3']['distance_sq'] + ' & ' + data['reg_4']['distance_sq'] + ' & ' + data['reg_5']['distance_sq'] + ' & ' + data['reg_6']['distance_sq'] + r' \\',
+        r'Distance-Cubed &' + data['reg_1']['distance_cu'] + ' & ' + data['reg_2']['distance_cu'] + ' & ' + data['reg_3']['distance_cu'] + ' & ' + data['reg_4']['distance_cu'] + ' & ' + data['reg_5']['distance_cu'] + ' & ' + data['reg_6']['distance_cu'] + r' \\',
+        r'Access to Public Transit in 2000 &' + data['reg_1']['transit'] + ' & ' + data['reg_2']['transit'] + ' & ' + data['reg_3']['transit'] + ' & ' + data['reg_4']['transit'] + ' & ' + data['reg_5']['transit'] + ' & ' + data['reg_6']['transit'] + r' \\',
+        r'\% Buildings Built 1999-2000 &' + data['reg_1']['built_1999_2000'] + ' & ' + data['reg_2']['built_1999_2000'] + ' & ' + data['reg_3']['built_1999_2000'] + ' & ' + data['reg_4']['built_1999_2000'] + ' & ' + data['reg_5']['built_1999_2000'] + ' & ' + data['reg_6']['built_1999_2000'] + r' \\',
+        r'\% Buildings Built 1995-1998 &' + data['reg_1']['built_1995_1998'] + ' & ' + data['reg_2']['built_1995_1998'] + ' & ' + data['reg_3']['built_1995_1998'] + ' & ' + data['reg_4']['built_1995_1998'] + ' & ' + data['reg_5']['built_1995_1998'] + ' & ' + data['reg_6']['built_1995_1998'] + r' \\',
+        r'\% Buildings Built 1990-1994 &' + data['reg_1']['built_1990_1994'] + ' & ' + data['reg_2']['built_1990_1994'] + ' & ' + data['reg_3']['built_1990_1994'] + ' & ' + data['reg_4']['built_1990_1994'] + ' & ' + data['reg_5']['built_1990_1994'] + ' & ' + data['reg_6']['built_1990_1994'] + r' \\',
+        r'\% Buildings Built 1970-1979 &' + data['reg_1']['built_1970_1979'] + ' & ' + data['reg_2']['built_1970_1979'] + ' & ' + data['reg_3']['built_1970_1979'] + ' & ' + data['reg_4']['built_1970_1979'] + ' & ' + data['reg_5']['built_1970_1979'] + ' & ' + data['reg_6']['built_1970_1979'] + r' \\',
+        r'\% Buildings Built 1960-1969 &' + data['reg_1']['built_1960_1969'] + ' & ' + data['reg_2']['built_1960_1969'] + ' & ' + data['reg_3']['built_1960_1969'] + ' & ' + data['reg_4']['built_1960_1969'] + ' & ' + data['reg_5']['built_1960_1969'] + ' & ' + data['reg_6']['built_1960_1969'] + r' \\',
+        r'\% Buildings Built 1950-1959 &' + data['reg_1']['built_1950_1959'] + ' & ' + data['reg_2']['built_1950_1959'] + ' & ' + data['reg_3']['built_1950_1959'] + ' & ' + data['reg_4']['built_1950_1959'] + ' & ' + data['reg_5']['built_1950_1959'] + ' & ' + data['reg_6']['built_1950_1959'] + r' \\',
+        r'\% Buildings Built 1940-1949 &' + data['reg_1']['built_1940_1949'] + ' & ' + data['reg_2']['built_1940_1949'] + ' & ' + data['reg_3']['built_1940_1949'] + ' & ' + data['reg_4']['built_1940_1949'] + ' & ' + data['reg_5']['built_1940_1949'] + ' & ' + data['reg_6']['built_1940_1949'] + r' \\',
+        r'\% Buildings Built 1939 or Earlier &' + data['reg_1']['built_1939_earlier'] + ' & ' + data['reg_2']['built_1939_earlier'] + ' & ' + data['reg_3']['built_1939_earlier'] + ' & ' + data['reg_4']['built_1939_earlier'] + ' & ' + data['reg_5']['built_1939_earlier'] + ' & ' + data['reg_6']['built_1939_earlier'] + r' \\',
+        r'Intercept &' + data['reg_1']['intercept'] + ' & ' + data['reg_2']['intercept'] + ' & ' + data['reg_3']['intercept'] + ' & ' + data['reg_4']['intercept'] + ' & ' + data['reg_5']['intercept'] + ' & ' + data['reg_6']['intercept'] + r' \\',
+        r'Observations &' + data['reg_1']['N'] + ' & ' + data['reg_2']['N'] + ' & ' + data['reg_3']['N'] + ' & ' + data['reg_4']['N'] + ' & ' + data['reg_5']['N'] + ' & ' + data['reg_6']['N'] + r' \\',
+        r'MSA Fixed Effects &' + data['reg_1']['msa_fe'] + ' & ' + data['reg_2']['msa_fe'] + ' & ' + data['reg_3']['msa_fe'] + ' & ' + data['reg_4']['msa_fe'] + ' & ' + data['reg_5']['msa_fe'] + ' & ' + data['reg_6']['msa_fe'] + r' \\',
+        r'School District Fixed Effects &' + data['reg_1']['school_fe'] + ' & ' + data['reg_2']['school_fe'] + ' & ' + data['reg_3']['school_fe'] + ' & ' + data['reg_4']['school_fe'] + ' & ' + data['reg_5']['school_fe'] + ' & ' + data['reg_6']['school_fe'] + r' \\',
+        r'Adjusted $R^2$ &' + data['reg_1']['r2'] + ' & ' + data['reg_2']['r2'] + ' & ' + data['reg_3']['r2'] + ' & ' + data['reg_4']['r2'] + ' & ' + data['reg_5']['r2'] + ' & ' + data['reg_6']['r2'] + r' \\\hline',
+        r'\end{tabular}',
         r'\end{table}'
-    )
+    ]
     return table_template
 
 for s in subsets.keys():
     for d in distances.keys():
         with open(build_save_path(d, s), 'w') as f:
-            f.write(build_table(d, s))
+            f.writelines([f'{el}\n' for el in build_table(d, s)])
