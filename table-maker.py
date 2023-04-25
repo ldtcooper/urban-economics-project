@@ -67,7 +67,7 @@ extract_built_1939_earlier = extract_line_builder('built_1939_earlier')
 def build_filename(reg_num: int, subset: str, dist: str) -> Path:
     # to work in both notebooks and scripts
     try:
-        return Path(os.path.dirname(os.path.realpath(__file__))) / 'model' / f'reg-{reg_num}-{subset}_{dist}.txt'
+        return Path(os.path.dirname(os.path.realpath(__file__))) / 'models' / f'reg-{reg_num}-{subset}_{dist}.txt'
     except NameError:
         return f'./models/reg-{reg_num}-{subset}_{dist}.txt'
 
